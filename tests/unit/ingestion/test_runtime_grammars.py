@@ -154,6 +154,25 @@ def test_fetch_requests_every_runtime_grammar_into_the_given_dir(
     assert sorted(result) == [("apex", False, ""), ("cobol", True, "")]
 
 
+def test_fetch_reports_a_grammar_that_fails_to_load_even_when_its_file_is_cached(
+    monkeypatch: pytest.MonkeyPatch, tmp_path
+) -> None:
+    import tree_sitter_language_pack as pack
+
+    def get_language(name: str) -> None:
+        if name == "cobol":
+            raise OSError("bad ELF header")
+        raise RuntimeError
+
+    monkeypatch.setattr(pack, "configure", lambda config: None)
+    monkeypatch.setattr(pack, "get_language", get_language)
+    monkeypatch.setattr(pack, "downloaded_languages", lambda: ["apex", "cobol"])
+
+    result = grammars.fetch_runtime_grammars(str(tmp_path))
+
+    assert sorted(result) == [("apex", False, "RuntimeError"), ("cobol", False, "bad ELF header")]
+
+
 def test_the_fetch_command_names_each_grammar_and_fails_when_one_is_missing(
     monkeypatch: pytest.MonkeyPatch, tmp_path
 ) -> None:

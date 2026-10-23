@@ -164,12 +164,13 @@ def fetch_runtime_grammars(cache_dir: str) -> list[tuple[str, bool, str]]:
         if spec.grammar_package != _RUNTIME_DOWNLOAD_PACKAGE:
             continue
         name = spec.grammar_loader_args[0] if spec.grammar_loader_args else spec.tag
-        error = ""
         try:
             getattr(pack, spec.grammar_loader)(name)
         except Exception as exc:
-            error = str(exc)
-        results.append((spec.tag, name in pack.downloaded_languages(), error))
+            # A cached file that will not load is still a failed fetch.
+            results.append((spec.tag, False, str(exc) or type(exc).__name__))
+            continue
+        results.append((spec.tag, name in pack.downloaded_languages(), ""))
     return results
 
 
