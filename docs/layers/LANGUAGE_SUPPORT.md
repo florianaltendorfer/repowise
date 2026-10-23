@@ -76,8 +76,9 @@ Scala, Elixir and F# have dedicated import resolvers with known gaps; see
 \* COBOL is excluded from dead-code claims: JCL, schedulers and dynamic program
 calls are entry paths the repository graph cannot observe.
 The COBOL and Apex grammars download on first use; offline, set
-`REPOWISE_GRAMMAR_DIR` to a pre-staged grammar cache. `repowise doctor` reports
-whether it is cached.
+`REPOWISE_GRAMMAR_DIR` to a pre-staged grammar cache. `repowise grammars fetch
+<dir>` stages that cache on a machine with network access; copy `<dir>` to the
+offline machine. `repowise doctor` reports whether each grammar is cached.
 COBOL is read in fixed reference format, with `EXEC SQL/CICS/DLI` blocks and
 `COPY` statements masked before parsing; a copybook parses as a data or
 procedure fragment. `COPY` and `EXEC SQL INCLUDE` members resolve to the
