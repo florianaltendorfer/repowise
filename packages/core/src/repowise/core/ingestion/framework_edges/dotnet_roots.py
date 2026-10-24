@@ -216,7 +216,11 @@ def _markup_types(ctx: ResolverContext) -> frozenset[str]:
 
 
 def _is_consumed(
-    sym: Any, modules: dict[str, Any], symbols: list[Any], services: set[str], hosted: frozenset[str]
+    sym: Any,
+    modules: dict[str, Any],
+    symbols: list[Any],
+    services: set[str],
+    hosted: frozenset[str],
 ) -> bool:
     namespace = _namespace_of(sym, modules)
     qualified = f"{namespace}.{sym.name}" if namespace else sym.name
